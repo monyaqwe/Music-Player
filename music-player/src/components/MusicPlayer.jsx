@@ -13,9 +13,18 @@ export const MusicPlayer = () => {
     prevTrack,
     isPlaying,
     setIsPlaying,
+    volume,
+    setVolume,
   } = useMusic();
 
   const audioRef = useRef(null);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = volume;
+  }, [volume]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -47,11 +56,18 @@ export const MusicPlayer = () => {
     };
   }, [currentTrack]);
 
+  const progressPercentage = duration ? (currentTime / duration) * 100 : 0;
+
   const handleTimeChange = (e) => {
     const audio = audioRef.current;
     const newTime = Number(e.target.value);
     audio.currentTime = newTime;
     setCurrentTime(newTime);
+  };
+
+  const handleVolumeChange = (e) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
   };
 
   return (
@@ -73,6 +89,7 @@ export const MusicPlayer = () => {
           step="0.1"
           value={currentTime}
           onChange={handleTimeChange}
+          style={{ "--progress": `${progressPercentage}%` }}
         />
 
         <span>{formatTime(duration)}</span>
@@ -86,6 +103,18 @@ export const MusicPlayer = () => {
         </button>
 
         <button onClick={nextTrack}>⏭️</button>
+      </div>
+      <div className="volume-control">
+        <span className="volume-icon">🔈</span>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.1"
+          className="volume-slider"
+          onChange={handleVolumeChange}
+          value={volume}
+        ></input>
       </div>
     </div>
   );

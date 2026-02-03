@@ -1,4 +1,4 @@
-/* Reset and base styles */
+/* RESET */
 * {
   margin: 0;
   padding: 0;
@@ -25,7 +25,10 @@ body {
   padding: 2rem;
 }
 
-/* Music Player Panel */
+/* ============================
+      MUSIC PLAYER PANEL
+============================ */
+
 .music-player {
   background-color: #1e1e1e;
   border-radius: 12px;
@@ -42,16 +45,20 @@ body {
   margin-bottom: 1rem;
 }
 
-.track-title {
+.track-info h3 {
   font-size: 1.2rem;
   font-weight: bold;
   color: #ffffff;
 }
 
-.track-artist {
+.track-info p {
   font-size: 0.9rem;
   color: #bbbbbb;
 }
+
+/* ============================
+      PROGRESS BAR
+============================ */
 
 .progress-container {
   display: flex;
@@ -61,16 +68,35 @@ body {
   margin: 1rem 0;
 }
 
-.progress-bar {
-  flex: 1;
-  appearance: none;
-  height: 6px;
-  background: #444;
-  border-radius: 4px;
-  outline: none;
+.progress-container span {
+  font-size: 0.8rem;
+  color: #aaa;
 }
 
-.progress-bar::-webkit-slider-thumb {
+/* Базовый стиль для всех range */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 4px;
+  background: #444;
+  outline: none;
+  cursor: pointer;
+
+  /* Зелёное заполнение */
+  background: linear-gradient(
+    to right,
+    #1db954 0%,
+    #1db954 var(--progress, 0%),
+    #444 var(--progress, 0%),
+    #444 100%
+  );
+}
+
+/* Ползунок */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
   appearance: none;
   width: 12px;
   height: 12px;
@@ -79,11 +105,17 @@ body {
   cursor: pointer;
 }
 
-.time,
-.duration {
-  font-size: 0.8rem;
-  color: #aaa;
+input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #1db954;
+  border-radius: 50%;
+  cursor: pointer;
 }
+
+/* ============================
+      CONTROLS
+============================ */
 
 .controls {
   display: flex;
@@ -91,9 +123,7 @@ body {
   margin-top: 1rem;
 }
 
-.control-button,
-.play-button,
-.next-button {
+.controls button {
   background-color: #1db954;
   border: none;
   color: white;
@@ -101,16 +131,40 @@ body {
   padding: 0.5rem 1rem;
   border-radius: 50px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.25s ease;
 }
 
-.control-button:hover,
-.play-button:hover,
-.next-button:hover {
+.controls button:hover {
   background-color: #1ed760;
 }
 
-/* Song List Panel */
+/* ============================
+      VOLUME CONTROL
+============================ */
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.volume-icon {
+  font-size: 1rem;
+  color: #ccc;
+}
+
+.volume-slider {
+  flex: 1;
+  width: 100%;
+  max-width: none;
+}
+
+/* ============================
+      SONG LIST PANEL
+============================ */
+
 .all-songs {
   flex: 1;
   background-color: #1a1a1a;
@@ -140,7 +194,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.25s ease;
 }
 
 .song-card:hover {
@@ -167,12 +221,7 @@ body {
   color: #aaa;
 }
 
-.play-button {
-  font-size: 1.2rem;
-  color: white;
-}
-
-/* Scrollbar styling */
+/* Scrollbar */
 .all-songs::-webkit-scrollbar {
   width: 6px;
 }

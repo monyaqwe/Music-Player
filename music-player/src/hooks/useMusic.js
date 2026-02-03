@@ -1,14 +1,43 @@
 import { useState, useRef, useEffect } from "react";
 
 export const useMusic = () => {
-  const songs = [
-    {
-      id: 1,
-      title: "Love sosa",
-      artist: "Chief Keef",
-      url: "/songs/LoveSosa.mp3",
-    },
-  ];
+  // Автоматически импортируем ВСЕ mp3 из public/songs
+  const importedSongs = import.meta.glob("/public/songs/*.mp3", {
+    eager: true,
+  });
+
+  // Превращаем файлы в массив песен
+  const songs = Object.keys(importedSongs).map((path, index) => {
+    const fileName = path.split("/").pop().replace(".mp3", "");
+
+    // По умолчанию
+    let artist = "Unknown Artist";
+    let title = fileName;
+
+    // Если формат "Artist - Title"
+    if (fileName.includes("-")) {
+      const [rawArtist, rawTitle] = fileName.split("-");
+
+      // Функция для красивого форматирования
+      const format = (str) =>
+        str
+          .trim()
+          .replace(/_/g, " ")
+          .replace(/([a-z])([A-Z])/g, "$1 $2") // LoveSosa → Love Sosa
+          .replace(/\s+/g, " ") // убрать двойные пробелы
+          .replace(/\b\w/g, (c) => c.toUpperCase()); // каждое слово с большой буквы
+
+      artist = format(rawArtist);
+      title = format(rawTitle);
+    }
+
+    return {
+      id: index + 1,
+      title,
+      artist,
+      url: path.replace("/public", ""), // /public/songs/... → /songs/...
+    };
+  });
 
   const audioRef = useRef(null);
 
@@ -18,6 +47,7 @@ export const useMusic = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(1);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -94,10 +124,10 @@ export const useMusic = () => {
     prevTrack,
     seek,
     formatTime,
-
-    // 👉 ДОБАВЛЯЕМ ЭТИ ТРИ СТРОКИ
     setIsPlaying,
     setCurrentTime,
     setDuration,
+    volume,
+    setVolume,
   };
 };
